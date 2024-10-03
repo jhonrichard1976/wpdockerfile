@@ -1,16 +1,13 @@
 # Usa la imagen oficial de WordPress como base
 FROM wordpress:latest
 
-# Opcionalmente, puedes configurar variables de entorno aquí o en tu docker-compose.yml
-# ENV WORDPRESS_DB_HOST=mysql
-# ENV WORDPRESS_DB_USER=root
-# ENV WORDPRESS_DB_PASSWORD=root
-# ENV WORDPRESS_DB_NAME=wordpress
+# Configura las variables de entorno para la base de datos
+ENV WORDPRESS_DB_HOST=mysql2008 \
+    WORDPRESS_DB_USER=usu2008 \
+    WORDPRESS_DB_PASSWORD=secret \
+    WORDPRESS_DB_NAME=wordpress2008
 
-# Si necesitas modificar algún archivo o hacer personalizaciones, puedes hacerlo aquí.
-# Por ejemplo, modificar wp-config.php o agregar plugins.
-
-# Por ejemplo, agregar una línea al wp-config.php para aumentar el límite de memoria:
+# Opcionalmente, puedes modificar wp-config.php para aumentar el límite de memoria
 RUN echo "define('WP_MEMORY_LIMIT', '256M');" >> /var/www/html/wp-config.php
 
 # Exponer el puerto por donde correrá la aplicación
