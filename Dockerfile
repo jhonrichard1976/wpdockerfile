@@ -1,5 +1,5 @@
-# Usar la imagen oficial de WordPress
-FROM wordpress:latest
+# Usar la imagen desde Quay
+FROM minsal-registry-quay-quay-registry.apps.acm.minsal.cl/wordpress/wordpress:6.6.2
 
 # Establecer las variables de entorno necesarias
 ENV WORDPRESS_DB_HOST=mysql2008 \
