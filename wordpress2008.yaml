@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress2008  # Nombre del Deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wordpress
+  template:
+    metadata:
+      labels:
+        app: wordpress
+    spec:
+      containers:
+      - name: wordpress
+        image: wordpress:latest  # La imagen será construida a partir del Dockerfile
+        env:
+        - name: WORDPRESS_DB_HOST
+          value: mysql2008
+        - name: WORDPRESS_DB_USER
+          value: usu2008
+        - name: WORDPRESS_DB_PASSWORD
+          value: secret
+        - name: WORDPRESS_DB_NAME
+          value: wordpress2008
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wordpress2008  # Nombre del servicio
+spec:
+  type: NodePort  # O LoadBalancer, según tus necesidades
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: wordpress
