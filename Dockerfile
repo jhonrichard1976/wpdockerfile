@@ -8,7 +8,7 @@ ENV WORDPRESS_DB_HOST=mysql2008 \
     WORDPRESS_DB_NAME=wordpress2008
 
 # Aumentar el límite de memoria de PHP y la capacidad de subida de archivos
-RUN echo "memory_limit = 256M" >> /usr/local/etc/php/conf.d/uploads.ini \
+RUN echo "memory_limit = 3G" >> /usr/local/etc/php/conf.d/uploads.ini \
     && echo "upload_max_filesize = 128M" >> /usr/local/etc/php/conf.d/uploads.ini \
     && echo "post_max_size = 128M" >> /usr/local/etc/php/conf.d/uploads.ini \
     && echo "max_execution_time = 300" >> /usr/local/etc/php/conf.d/uploads.ini \
