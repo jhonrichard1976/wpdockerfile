@@ -7,19 +7,23 @@ ENV WORDPRESS_DB_HOST=mysql2008 \
     WORDPRESS_DB_PASSWORD=secret \
     WORDPRESS_DB_NAME=wordpress2008
 
-# Aumentar el límite de memoria de PHP
+# Aumentar el límite de memoria de PHP y configurar límites de carga
 RUN echo "memory_limit = 256M" >> /usr/local/etc/php/conf.d/uploads.ini \
     && echo "upload_max_filesize = 128M" >> /usr/local/etc/php/conf.d/uploads.ini \
     && echo "post_max_size = 128M" >> /usr/local/etc/php/conf.d/uploads.ini \
     && echo "max_execution_time = 300" >> /usr/local/etc/php/conf.d/uploads.ini \
-    && echo "max_input_time = 300" >> /usr/local/etc/php/conf.d/uploads.ini
+    && echo "max_input_time = 300" >> /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "expose_php = Off" >> /usr/local/etc/php/conf.d/security.ini  # Ocultar la versión de PHP
 
-# Ocultar la versión de Apache (modificar la configuración de Apache)
+# Ocultar la versión de Apache
 RUN echo "ServerTokens Prod" >> /etc/apache2/conf-available/security.conf \
     && echo "ServerSignature Off" >> /etc/apache2/conf-available/security.conf
 
 # Habilitar el módulo headers para gestionar los encabezados
 RUN a2enmod headers
+
+# Añadir la cabecera X-Frame-Options: SAMEORIGIN
+RUN echo 'Header always set X-Frame-Options "SAMEORIGIN"' >> /etc/apache2/conf-available/security.conf
 
 # Cambiar los permisos de las carpetas necesarias para el usuario no root
 RUN chown -R www-data:www-data /var/www/html/wp-content \
