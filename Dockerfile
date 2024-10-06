@@ -7,8 +7,12 @@ ENV WORDPRESS_DB_HOST=mysql2008 \
     WORDPRESS_DB_PASSWORD=secret \
     WORDPRESS_DB_NAME=wordpress2008
 
-# Aumentar el límite de memoria de PHP
-RUN echo "memory_limit = 256M" >> /usr/local/etc/php/conf.d/uploads.ini
+# Aumentar el límite de memoria de PHP y la capacidad de subida de archivos
+RUN echo "memory_limit = 256M" >> /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "upload_max_filesize = 128M" >> /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "post_max_size = 128M" >> /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "max_execution_time = 300" >> /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "max_input_time = 300" >> /usr/local/etc/php/conf.d/uploads.ini
 
 # Cambiar los permisos de las carpetas necesarias para el usuario no root
 RUN chown -R www-data:www-data /var/www/html/wp-content \
