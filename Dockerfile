@@ -2,10 +2,10 @@
 FROM wordpress:latest
 
 # Establecer las variables de entorno necesarias
-ENV WORDPRESS_DB_HOST=mysql2008 \
-    WORDPRESS_DB_USER=usu2008 \
-    WORDPRESS_DB_PASSWORD=secret \
-    WORDPRESS_DB_NAME=wordpress2008
+#ENV WORDPRESS_DB_HOST=mysql2008 \
+    #WORDPRESS_DB_USER=usu2008 \
+    #WORDPRESS_DB_PASSWORD=secret \
+    #WORDPRESS_DB_NAME=wordpress2008
 
 # Aumentar el límite de memoria de PHP y configurar límites de carga
 RUN echo "memory_limit = 256M" >> /usr/local/etc/php/conf.d/uploads.ini \
