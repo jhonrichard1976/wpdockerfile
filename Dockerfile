@@ -9,8 +9,8 @@ ENV WORDPRESS_DB_HOST=mysql2008 \
 
 # Aumentar el límite de memoria de PHP y configurar límites de carga
 RUN echo "memory_limit = 256M" >> /usr/local/etc/php/conf.d/uploads.ini \
-    && echo "upload_max_filesize = 128M" >> /usr/local/etc/php/conf.d/uploads.ini \
-    && echo "post_max_size = 128M" >> /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "upload_max_filesize = 4G" >> /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "post_max_size = 4G" >> /usr/local/etc/php/conf.d/uploads.ini \
     && echo "max_execution_time = 300" >> /usr/local/etc/php/conf.d/uploads.ini \
     && echo "max_input_time = 300" >> /usr/local/etc/php/conf.d/uploads.ini \
     && echo "expose_php = Off" >> /usr/local/etc/php/conf.d/security.ini  # Ocultar la versión de PHP
