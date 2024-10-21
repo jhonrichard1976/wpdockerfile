@@ -31,7 +31,7 @@ RUN echo 'Header always set X-Frame-Options "SAMEORIGIN"' >> /etc/apache2/conf-a
 RUN echo '<FilesMatch "xmlrpc\.php$">' >> /var/www/html/.htaccess \
     && echo '    Order deny, allow' >> /var/www/html/.htaccess \
     && echo '    Deny from all' >> /var/www/html/.htaccess \
-    && echo '    Allow from 163.247.51.138' >> /var/www/html/.htaccess \ # Cambia esto por tu IP
+    && echo '    Allow from 163.247.51.138' >> /var/www/html/.htaccess \
     && echo '</FilesMatch>' >> /var/www/html/.htaccess
 
 # Cambiar los permisos de las carpetas necesarias para el usuario no root
