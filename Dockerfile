@@ -24,6 +24,13 @@ RUN echo "ServerTokens Prod" >> /etc/apache2/conf-available/security.conf \
     # Configura el archivo de Apache para ocultar la información del servidor
 RUN echo "ServerTokens Prod\nServerSignature Off\nHeader unset Server" >> /etc/apache2/conf-available/security.conf
 
+# Habilita los módulos necesarios en Apache
+RUN a2enmod rewrite headers
+
+# Configura el archivo de Apache para ocultar la información del servidor
+RUN echo "ServerTokens Prod\nServerSignature Off\n" > /etc/apache2/conf-available/security.conf \
+    && echo 'Header always unset "Server"' >> /etc/apache2/conf-available/security.conf
+
 # Habilitar el módulo headers para gestionar los encabezados
 RUN a2enmod headers
 
