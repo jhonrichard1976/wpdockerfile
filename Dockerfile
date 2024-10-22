@@ -21,6 +21,9 @@ RUN echo "expose_php = Off" >> /usr/local/etc/php/conf.d/security.ini
 RUN echo "ServerTokens Prod" >> /etc/apache2/conf-available/security.conf \
     && echo "ServerSignature Off" >> /etc/apache2/conf-available/security.conf
 
+    # Configura el archivo de Apache para ocultar la información del servidor
+RUN echo "ServerTokens Prod\nServerSignature Off\nHeader unset Server" >> /etc/apache2/conf-available/security.conf
+
 # Habilitar el módulo headers para gestionar los encabezados
 RUN a2enmod headers
 
