@@ -28,22 +28,23 @@ RUN a2enmod headers
 RUN echo 'Header always set X-Frame-Options "SAMEORIGIN"' >> /etc/apache2/conf-available/security.conf
 
 # Añadir la restricción para xmlrpc.php en la configuración de Apache
-RUN echo '<FilesMatch "xmlrpc\.php$">\n\
-    Order deny,allow\n\
-    Deny from all\n\
-    Allow from 163.247.51.138\n\
-</FilesMatch>' >> /etc/apache2/conf-available/security.conf
-
-# Habilitar la configuración de seguridad en Apache
-RUN a2enconf security
+RUN echo '<FilesMatch "xmlrpc\.php$">' >> /var/www/html/.htaccess \
+    && echo '    Order deny,allow' >> /var/www/html/.htaccess \
+    && echo '    Deny from all' >> /var/www/html/.htaccess \
+    && echo '    Allow from 163.247.51.138' >> /var/www/html/.htaccess \  # Cambia esta IP por la que necesites
+    && echo '</FilesMatch>' >> /var/www/html/.htaccess
 
 # Instalar WP-CLI para administrar plugins
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
     && chmod +x wp-cli.phar \
     && mv wp-cli.phar /usr/local/bin/wp
 
+# Descargar WordPress en el directorio adecuado
+WORKDIR /var/www/html
+RUN wp core download --allow-root
+
 # Instalar el plugin Stop User Enumeration y activarlo
-RUN wp plugin install stop-user-enumeration --activate --allow-root
+RUN wp plugin install stop-user-enumeration --activate --allow-root --path=/var/www/html
 
 # Deshabilitar la API REST para usuarios no autenticados agregando un filtro en wp-config.php
 RUN echo "add_filter('rest_authentication_errors', function(\$result) {" >> /usr/src/wordpress/wp-config.php \
