@@ -31,16 +31,13 @@ RUN a2enmod rewrite headers
 RUN echo "ServerTokens Prod\nServerSignature Off\n" > /etc/apache2/conf-available/security.conf \
     && echo 'Header always unset "Server"' >> /etc/apache2/conf-available/security.conf
 
-# Habilitar el módulo headers para gestionar los encabezados
-RUN a2enmod headers
-
 # Añadir la cabecera HTTP Strict Transport Security (HSTS)
 RUN echo 'Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"' >> /etc/apache2/conf-available/security.conf
 
 # Añadir la cabecera X-Frame-Options: SAMEORIGIN
 RUN echo 'Header always set X-Frame-Options "SAMEORIGIN"' >> /etc/apache2/conf-available/security.conf
 
-# Añadir la restricción para xmlrpc.php en la configuración de Apache
+# Punto 1 Añadir la restricción para xmlrpc.php en la configuración de Apache. descripción  DDoS vulnerables (wp-cron.php)
 RUN echo '<FilesMatch "xmlrpc\.php$">\n\
     Order deny,allow\n\
     Deny from all\n\
