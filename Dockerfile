@@ -24,6 +24,9 @@ RUN echo "ServerTokens Prod" >> /etc/apache2/conf-available/security.conf \
 # Habilitar el módulo headers para gestionar los encabezados
 RUN a2enmod headers
 
+# Añadir la cabecera HTTP Strict Transport Security (HSTS)
+RUN echo 'Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"' >> /etc/apache2/conf-available/security.conf
+
 # Añadir la cabecera X-Frame-Options: SAMEORIGIN
 RUN echo 'Header always set X-Frame-Options "SAMEORIGIN"' >> /etc/apache2/conf-available/security.conf
 
