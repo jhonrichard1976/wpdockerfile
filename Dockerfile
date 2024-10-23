@@ -7,6 +7,9 @@ ENV WORDPRESS_DB_NAME=wordpress2008
 ENV WORDPRESS_DB_USER=usu2008
 ENV WORDPRESS_DB_PASSWORD=secret
 
+# Declara el volumen para persistencia
+VOLUME ["/var/www/html"]
+
 # Exponer el puerto 80 para WordPress
 EXPOSE 80
 
