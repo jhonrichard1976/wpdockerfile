@@ -45,7 +45,7 @@ RUN echo '<FilesMatch "wp-cron\.php$">\n\
 # Habilitar la configuración de seguridad en Apache
 RUN a2enconf security
 
-# Configuración de CORS en Apache
+# Configuración de CORS en Apache esta opcion se uso para quitar o mitigar  TRACE
 RUN echo '<IfModule mod_headers.c>\n\
     Header set Access-Control-Allow-Origin "*"\n\
     Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"\n\
