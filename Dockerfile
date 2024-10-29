@@ -30,18 +30,16 @@ RUN echo 'Header always set Strict-Transport-Security "max-age=31536000; include
 # Añadir la cabecera X-Frame-Options: SAMEORIGIN
 RUN echo 'Header always set X-Frame-Options "SAMEORIGIN"' >> /etc/apache2/conf-available/security.conf
 
-# Añadir la restricción para xmlrpc.php en la configuración de Apache.
+# Bloquear el acceso a xmlrpc.php en la configuración de Apache
 RUN echo '<FilesMatch "xmlrpc\.php$">\n\
     Order deny,allow\n\
     Deny from all\n\
-    Allow from 163.247.51.138\n\
 </FilesMatch>' >> /etc/apache2/conf-available/security.conf
 
-# Añadir la restricción para wp-cron.php en la configuración de Apache
+# Bloquear el acceso a wp-cron.php en la configuración de Apache
 RUN echo '<FilesMatch "wp-cron\.php$">\n\
     Order deny,allow\n\
     Deny from all\n\
-    Allow from 163.247.51.138\n\
 </FilesMatch>' >> /etc/apache2/conf-available/security.conf
 
 # Habilitar la configuración de seguridad en Apache
