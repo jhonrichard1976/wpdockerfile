@@ -56,6 +56,9 @@ RUN echo '<IfModule mod_headers.c>\n\
 # Habilita el módulo headers y la configuración de CORS
 RUN a2enconf cors
 
+# Crear la estructura de directorios necesaria para el tema Divi
+RUN mkdir -p /var/www/html/wp-content/themes/Divi/js
+
 # Descargar una versión segura de Underscore.js y reemplazar la versión vulnerable
 RUN curl -o /tmp/underscore.min.js https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.6/underscore-min.js \
     && cp /tmp/underscore.min.js /var/www/html/wp-content/themes/Divi/js/custom.js
