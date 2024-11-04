@@ -45,7 +45,7 @@ RUN echo '<FilesMatch "wp-cron\.php$">\n\
 # Habilitar la configuración de seguridad en Apache
 RUN a2enconf security
 
-# Configuración de CORS en Apache esta opcion se uso para quitar o mitigar  TRACE
+# Configuración de CORS en Apache para mitigar TRACE
 RUN echo '<IfModule mod_headers.c>\n\
     Header set Access-Control-Allow-Origin "*"\n\
     Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"\n\
@@ -59,10 +59,7 @@ RUN a2enconf cors
 # Copia el contenido de WordPress en el directorio de Apache
 COPY . /var/www/html
 
-# Crear la estructura de directorios necesaria para el tema Divi después de copiar el contenido de WordPress
-RUN mkdir -p /var/www/html/wp-content/themes/Divi/js
-
-# Descargar una versión segura de Underscore.js y reemplazar la versión vulnerable
+# Descargar una versión segura de Underscore.js y reemplazar el archivo custom.js
 RUN curl -o /tmp/underscore.min.js https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.6/underscore-min.js \
     && cp /tmp/underscore.min.js /var/www/html/wp-content/themes/Divi/js/custom.js
 
