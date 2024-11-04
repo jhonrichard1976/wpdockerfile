@@ -45,7 +45,7 @@ RUN echo '<FilesMatch "wp-cron\.php$">\n\
 # Habilitar la configuración de seguridad en Apache
 RUN a2enconf security
 
-# Configuración de CORS en Apache para mitigar TRACE
+# Configuración de CORS en Apache esta opcion se uso para quitar o mitigar TRACE
 RUN echo '<IfModule mod_headers.c>\n\
     Header set Access-Control-Allow-Origin "*"\n\
     Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"\n\
@@ -56,12 +56,18 @@ RUN echo '<IfModule mod_headers.c>\n\
 # Habilita el módulo headers y la configuración de CORS
 RUN a2enconf cors
 
+# Ocultar la versión de WordPress
+RUN echo "<?php \
+remove_action('wp_head', 'wp_generator'); \
+function remove_wp_version_strings(\$src) { \
+    return remove_query_arg('ver', \$src); \
+} \
+add_filter('script_loader_src', 'remove_wp_version_strings'); \
+add_filter('style_loader_src', 'remove_wp_version_strings'); \
+?>" >> /var/www/html/wp-content/themes/twentytwentyone/functions.php
+
 # Copia el contenido de WordPress en el directorio de Apache
 COPY . /var/www/html
-
-# Descargar una versión segura de Underscore.js y reemplazar el archivo custom.js
-RUN curl -o /tmp/underscore.min.js https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.6/underscore-min.js \
-    && cp /tmp/underscore.min.js /var/www/html/wp-content/themes/Divi/js/custom.js
 
 # Cambiar los permisos de las carpetas necesarias para el usuario no root
 RUN chown -R www-data:www-data /var/www/html/wp-content \
