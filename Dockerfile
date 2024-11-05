@@ -21,15 +21,8 @@ RUN echo "expose_php = Off" >> /usr/local/etc/php/conf.d/security.ini
 RUN echo "ServerTokens Prod" >> /etc/apache2/conf-available/security.conf \
     && echo "ServerSignature Off" >> /etc/apache2/conf-available/security.conf
 
-    # Configura el archivo de Apache para ocultar la información del servidor
-    # RUN echo "ServerTokens Prod\nServerSignature Off\nHeader unset Server" >> /etc/apache2/conf-available/security.conf
-
 # Habilita los módulos necesarios en Apache
 RUN a2enmod rewrite headers
-
-    # Configura el archivo de Apache para ocultar la información del servidor
-    # RUN echo "ServerTokens Prod\nServerSignature Off\n" > /etc/apache2/conf-available/security.conf \
-    # && echo 'Header always unset "Server"' >> /etc/apache2/conf-available/security.conf
 
 # Añadir la cabecera HTTP Strict Transport Security (HSTS)
 RUN echo 'Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"' >> /etc/apache2/conf-available/security.conf
@@ -44,8 +37,16 @@ RUN echo '<FilesMatch "xmlrpc\.php$">\n\
     Allow from 163.247.51.138\n\
 </FilesMatch>' >> /etc/apache2/conf-available/security.conf
 
-# Habilitar la configuración de seguridad en Apache
-RUN a2enconf security
+# Configuración de CORS: Permitir solo solicitudes desde el dominio especificado
+RUN echo '<IfModule mod_headers.c>\n\
+    Header set Access-Control-Allow-Origin "https://ssantofagastanuevo.minsal.cl"\n\
+    Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"\n\
+    Header set Access-Control-Allow-Headers "Authorization, X-Requested-With"\n\
+</IfModule>' >> /etc/apache2/conf-available/cors.conf
+
+# Habilitar la configuración de seguridad y CORS en Apache
+RUN a2enconf security \
+    && a2enconf cors
 
 # Cambiar los permisos de las carpetas necesarias para el usuario no root
 RUN chown -R www-data:www-data /var/www/html/wp-content \
