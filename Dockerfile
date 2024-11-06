@@ -71,7 +71,7 @@ RUN chown -R www-data:www-data /var/www/html/wp-content \
     && chmod -R 755 /var/www/html/wp-content
 
 # Agregar el código para deshabilitar la API REST en functions.php
-RUN echo "<?php function completely_disable_rest_api(\$access) { return new WP_Error('', __('','your-text-domain'), array('status' => rest_authorization_required_code())); } add_filter('rest_authentication_errors', 'completely_disable_rest_api');" >> /var/www/html/ssantofagastanuevo/wp-content/themes/functions.php
+RUN echo "<?php function completely_disable_rest_api(\$access) { return new WP_Error('', __('','your-text-domain'), array('status' => rest_authorization_required_code())); } add_filter('rest_authentication_errors', 'completely_disable_rest_api');" >> /var/www/html/wp-content/themes/functions.php
 
 # Iniciar Fail2Ban y Apache en un solo comando
 CMD service fail2ban start && apache2-foreground
