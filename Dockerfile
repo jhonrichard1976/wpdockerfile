@@ -30,7 +30,7 @@ RUN echo 'Header always set Strict-Transport-Security "max-age=31536000; include
 # Añadir la cabecera X-Frame-Options: SAMEORIGIN
 RUN echo 'Header always set X-Frame-Options "SAMEORIGIN"' >> /etc/apache2/conf-available/security.conf
 
-# Añadir la restricción para xmlrpc.php en la configuración de Apache (DDoS vulnerables)
+# Punto 1 Añadir la restricción para xmlrpc.php en la configuración de Apache.
 RUN echo '<FilesMatch "xmlrpc\.php$">\n\
     Order deny,allow\n\
     Deny from all\n\
@@ -48,32 +48,27 @@ RUN echo '<IfModule mod_headers.c>\n\
 RUN a2enconf security \
     && a2enconf cors
 
-# Configuración de Fail2Ban
-RUN apt-get update && \
-    apt-get install -y fail2ban && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+# Instalar Fail2Ban
+RUN apt-get update && apt-get install -y fail2ban && rm -rf /var/lib/apt/lists/*
 
-# Configuración de Fail2Ban para limitar intentos en /wp-admin
-RUN echo "[DEFAULT]\n\
-bantime = 3600\n\
-findtime = 600\n\
-maxretry = 5\n\
-\n\
-[wordpress]\n\
+# Configuración de Fail2Ban para WordPress
+RUN echo '[wordpress]\n\
 enabled = true\n\
-port = http,https\n\
-filter = wordpress-auth\n\
+filter = wordpress\n\
 logpath = /var/log/apache2/access.log\n\
-maxretry = 5\n" > /etc/fail2ban/jail.local && \
-    echo "[Definition]\n\
-failregex = ^<HOST> .* \"POST /wp-login.php\n\
-ignoreregex =\n" > /etc/fail2ban/filter.d/wordpress-auth.conf
+maxretry = 5\n\
+bantime = 600\n\
+findtime = 600\n\
+action = iptables[name=wordpress, port=http, protocol=tcp]' > /etc/fail2ban/jail.d/wordpress.conf
 
-# Crear script de inicio para ejecutar Fail2Ban junto con Apache
-RUN echo "#!/bin/bash\n\
-service fail2ban start\n\
-exec apache2-foreground\n" > /start.sh && \
-    chmod +x /start.sh
+# Crear el filtro de Fail2Ban para WordPress
+RUN echo '[Definition]\n\
+failregex = <HOST>.*POST /wp-login.php.* 200\n\
+ignoreregex =' > /etc/fail2ban/filter.d/wordpress.conf
+
+# Configurar el script de inicio
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
 
 # Cambiar los permisos de las carpetas necesarias para el usuario no root
 RUN chown -R www-data:www-data /var/www/html/wp-content \
