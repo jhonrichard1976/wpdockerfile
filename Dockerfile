@@ -30,7 +30,7 @@ RUN echo 'Header always set Strict-Transport-Security "max-age=31536000; include
 # Añadir la cabecera X-Frame-Options: SAMEORIGIN
 RUN echo 'Header always set X-Frame-Options "SAMEORIGIN"' >> /etc/apache2/conf-available/security.conf
 
-# Punto 1 Añadir la restricción para xmlrpc.php en la configuración de Apache. descripción  DDoS vulnerables (wp-cron.php)
+# Añadir la restricción para xmlrpc.php en la configuración de Apache (DDoS vulnerables)
 RUN echo '<FilesMatch "xmlrpc\.php$">\n\
     Order deny,allow\n\
     Deny from all\n\
@@ -48,9 +48,36 @@ RUN echo '<IfModule mod_headers.c>\n\
 RUN a2enconf security \
     && a2enconf cors
 
+# Configuración de Fail2Ban
+RUN apt-get update && \
+    apt-get install -y fail2ban && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Configuración de Fail2Ban para limitar intentos en /wp-admin
+RUN echo "[DEFAULT]\n\
+bantime = 3600\n\
+findtime = 600\n\
+maxretry = 5\n\
+\n\
+[wordpress]\n\
+enabled = true\n\
+port = http,https\n\
+filter = wordpress-auth\n\
+logpath = /var/log/apache2/access.log\n\
+maxretry = 5\n" > /etc/fail2ban/jail.local && \
+    echo "[Definition]\n\
+failregex = ^<HOST> .* \"POST /wp-login.php\n\
+ignoreregex =\n" > /etc/fail2ban/filter.d/wordpress-auth.conf
+
+# Crear script de inicio para ejecutar Fail2Ban junto con Apache
+RUN echo "#!/bin/bash\n\
+service fail2ban start\n\
+exec apache2-foreground\n" > /start.sh && \
+    chmod +x /start.sh
+
 # Cambiar los permisos de las carpetas necesarias para el usuario no root
 RUN chown -R www-data:www-data /var/www/html/wp-content \
     && chmod -R 755 /var/www/html/wp-content
 
 # Comando por defecto
-CMD ["apache2-foreground"]
+CMD ["/start.sh"]
