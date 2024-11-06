@@ -30,7 +30,7 @@ RUN echo 'Header always set Strict-Transport-Security "max-age=31536000; include
 # Añadir la cabecera X-Frame-Options: SAMEORIGIN
 RUN echo 'Header always set X-Frame-Options "SAMEORIGIN"' >> /etc/apache2/conf-available/security.conf
 
-# Punto 1 Añadir la restricción para xmlrpc.php en la configuración de Apache.
+# Añadir la restricción para xmlrpc.php en la configuración de Apache
 RUN echo '<FilesMatch "xmlrpc\.php$">\n\
     Order deny,allow\n\
     Deny from all\n\
@@ -66,16 +66,9 @@ RUN echo '[Definition]\n\
 failregex = <HOST>.*POST /wp-login.php.* 200\n\
 ignoreregex =' > /etc/fail2ban/filter.d/wordpress.conf
 
-# Configurar el script de inicio
-COPY start.sh /start.sh
-RUN chmod +x /start.sh
-
 # Cambiar los permisos de las carpetas necesarias para el usuario no root
 RUN chown -R www-data:www-data /var/www/html/wp-content \
     && chmod -R 755 /var/www/html/wp-content
 
-# Agregar el código para deshabilitar la API REST en functions.php
-RUN echo "<?php function completely_disable_rest_api(\$access) { return new WP_Error('', __('','your-text-domain'), array('status' => rest_authorization_required_code())); } add_filter('rest_authentication_errors', 'completely_disable_rest_api');" >> /var/www/html/ssantofagastanuevo/wp-content/themes/functions.php
-
-# Comando por defecto
-CMD ["/start.sh"]
+# Iniciar Fail2Ban y Apache en un solo comando
+CMD service fail2ban start && apache2-foreground
