@@ -38,12 +38,10 @@ RUN echo '<FilesMatch "xmlrpc\.php$">\n\
 </FilesMatch>' >> /etc/apache2/conf-available/security.conf
 
 # Bloquear el acceso a wp-cron.php en la configuración de Apache
-RUN echo '<IfModule mod_headers.c>\n\
 RUN echo '<FilesMatch "wp-cron\.php$">\n\
-    Header set Access-Control-Allow-Origin "https://ssantofagastanuevo.minsal.cl"\n\
     Order deny,allow\n\
-    Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"\n\
     Deny from all\n\
+</FilesMatch>' >> /etc/apache2/conf-available/security.conf
 
 # Configuración de CORS: Permitir solo solicitudes desde el dominio especificado
 RUN echo '<IfModule mod_headers.c>\n\
