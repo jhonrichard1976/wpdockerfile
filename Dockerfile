@@ -34,7 +34,7 @@ RUN echo 'Header always set X-Frame-Options "SAMEORIGIN"' >> /etc/apache2/conf-a
 RUN echo '<FilesMatch "xmlrpc\.php$">\n\
     Order deny,allow\n\
     Deny from all\n\
-    Allow from 163.247.51.138\n\
+    
 </FilesMatch>' >> /etc/apache2/conf-available/security.conf
 
 # Configuración de CORS: Permitir solo solicitudes desde el dominio especificado
