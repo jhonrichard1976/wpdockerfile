@@ -1,5 +1,5 @@
 # Usar la imagen oficial de WordPress
-FROM wordpress:latest
+FROM wordpress:6.6.2
 
 # Establecer las variables de entorno necesarias
 ENV WORDPRESS_DB_HOST=mysql2008 \
