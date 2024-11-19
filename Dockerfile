@@ -58,5 +58,16 @@ RUN a2enconf security \
 RUN chown -R www-data:www-data /var/www/html/wp-content \
     && chmod -R 755 /var/www/html/wp-content
 
+# Habilitar mod_rewrite (adición)
+RUN a2enmod rewrite
+
+# Configurar AllowOverride para que permita .htaccess (adición)
+RUN sed -i 's/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
+
+# Deshabilitar SELinux (solo si está presente, adición)
+RUN if [ -f /etc/selinux/config ]; then \
+        sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config; \
+    fi
+
 # Comando por defecto
 CMD ["apache2-foreground"]
