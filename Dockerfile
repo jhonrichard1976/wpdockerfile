@@ -44,7 +44,7 @@ RUN echo '<FilesMatch "wp-cron\.php$">\n\
 
 # Configuración de CORS: Permitir solo solicitudes desde el dominio especificado
 RUN echo '<IfModule mod_headers.c>\n\
-    Header set Access-Control-Allow-Origin "https://vacunas.minsal.cl"\n\
+    Header set Access-Control-Allow-Origin "https://ssa.redsalud.gob.cl"\n\
     Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"\n\
     Header set Access-Control-Allow-Headers "Authorization, X-Requested-With, Content-Type, X-WP-Nonce"\n\
 </IfModule>' >> /etc/apache2/conf-available/cors.conf
