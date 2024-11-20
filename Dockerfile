@@ -51,8 +51,8 @@ RUN echo '<FilesMatch "wp-cron\.php$">\n\
 #</IfModule>' >> /etc/apache2/conf-available/cors.conf
 
 # Habilitar la configuración de seguridad y CORS en Apache
-RUN a2enconf security \
-    && a2enconf cors
+#RUN a2enconf security \
+    #&& a2enconf cors
 
 # Cambiar los permisos de las carpetas necesarias para el usuario no root
 RUN chown -R www-data:www-data /var/www/html/wp-content \
