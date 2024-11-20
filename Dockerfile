@@ -30,11 +30,10 @@ RUN echo 'Header always set Strict-Transport-Security "max-age=31536000; include
 # Añadir la cabecera X-Frame-Options: SAMEORIGIN
 RUN echo 'Header always set X-Frame-Options "SAMEORIGIN"' >> /etc/apache2/conf-available/security.conf
 
-# Punto 1 Añadir la restricción para xmlrpc.php en la configuración de Apache. descripción  DDoS vulnerables (wp-cron.php)
+# Punto 1 Añadir la restricción para xmlrpc.php en la configuración de Apache
 RUN echo '<FilesMatch "xmlrpc\.php$">\n\
     Order deny,allow\n\
     Deny from all\n\
-    
 </FilesMatch>' >> /etc/apache2/conf-available/security.conf
 
 # Bloquear el acceso a wp-cron.php en la configuración de Apache
@@ -44,15 +43,15 @@ RUN echo '<FilesMatch "wp-cron\.php$">\n\
 </FilesMatch>' >> /etc/apache2/conf-available/security.conf
 
 # Configuración de CORS: Permitir solo solicitudes desde el dominio especificado
-#RUN echo '<IfModule mod_headers.c>\n\
-    #Header set Access-Control-Allow-Origin "https://ssa.redsalud.gob.cl"\n\
-    #Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"\n\
-    #Header set Access-Control-Allow-Headers "Authorization, X-Requested-With"\n\
-#</IfModule>' >> /etc/apache2/conf-available/cors.conf
+RUN echo '<IfModule mod_headers.c>\n\
+    Header set Access-Control-Allow-Origin "https://ssa.redsalud.gob.cl"\n\
+    Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"\n\
+    Header set Access-Control-Allow-Headers "Authorization, X-Requested-With, Content-Type, X-WP-Nonce"\n\
+</IfModule>' >> /etc/apache2/conf-available/cors.conf
 
 # Habilitar la configuración de seguridad y CORS en Apache
-#RUN a2enconf security \
-    #&& a2enconf cors
+RUN a2enconf security \
+    && a2enconf cors
 
 # Cambiar los permisos de las carpetas necesarias para el usuario no root
 RUN chown -R www-data:www-data /var/www/html \
