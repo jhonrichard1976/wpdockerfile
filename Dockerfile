@@ -44,11 +44,11 @@ RUN echo '<FilesMatch "wp-cron\.php$">\n\
 </FilesMatch>' >> /etc/apache2/conf-available/security.conf
 
 # Configuración de CORS: Permitir solo solicitudes desde el dominio especificado
-RUN echo '<IfModule mod_headers.c>\n\
-    Header set Access-Control-Allow-Origin "https://ssa.redsalud.gob.cl"\n\
-    Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"\n\
-    Header set Access-Control-Allow-Headers "Authorization, X-Requested-With"\n\
-</IfModule>' >> /etc/apache2/conf-available/cors.conf
+#RUN echo '<IfModule mod_headers.c>\n\
+    #Header set Access-Control-Allow-Origin "https://ssa.redsalud.gob.cl"\n\
+    #Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"\n\
+    #Header set Access-Control-Allow-Headers "Authorization, X-Requested-With"\n\
+#</IfModule>' >> /etc/apache2/conf-available/cors.conf
 
 # Habilitar la configuración de seguridad y CORS en Apache
 RUN a2enconf security \
