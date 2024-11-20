@@ -55,8 +55,8 @@ RUN echo '<FilesMatch "wp-cron\.php$">\n\
     #&& a2enconf cors
 
 # Cambiar los permisos de las carpetas necesarias para el usuario no root
-RUN chown -R www-data:www-data /var/www/html/wp-content \
-    && chmod -R 755 /var/www/html/wp-content
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html
 
 # Habilitar mod_rewrite (adición)
 RUN a2enmod rewrite
