@@ -1,5 +1,5 @@
 # Usar la imagen oficial de WordPress
-FROM wordpress:latest
+FROM docker.io/wordpress:latest
 
 # Establecer las variables de entorno necesarias
 ENV WORDPRESS_DB_HOST=mysql2008 \
