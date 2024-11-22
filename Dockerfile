@@ -1,5 +1,5 @@
 # Usar la imagen oficial de WordPress
-FROM docker.io/wordpress:latest
+FROM docker.io/wordpress:6.6.2
 
 # Establecer las variables de entorno necesarias
 ENV WORDPRESS_DB_HOST=mysql2008 \
@@ -67,6 +67,13 @@ RUN sed -i 's/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
 RUN if [ -f /etc/selinux/config ]; then \
         sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config; \
     fi
+
+# Eliminar metaetiqueta de versión de WordPress en wp_head
+RUN echo "<?php remove_action('wp_head', 'wp_generator'); ?>" >> /var/www/html/wp-content/themes/twentytwentythree/functions.php
+
+# Eliminar el archivo readme.html de WordPress
+RUN rm -f /var/www/html/readme.html
+    
 
 # Comando por defecto
 CMD ["apache2-foreground"]
