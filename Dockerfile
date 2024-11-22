@@ -69,10 +69,10 @@ RUN if [ -f /etc/selinux/config ]; then \
     fi
 
 # Eliminar metaetiqueta de versión de WordPress en wp_head
-RUN echo "<?php remove_action('wp_head', 'wp_generator'); ?>" >> /var/www/html/wp-content/themes/twentytwentythree/functions.php
+#RUN echo "<?php remove_action('wp_head', 'wp_generator'); ?>" >> /var/www/html/wp-content/themes/twentytwentythree/functions.php
 
 # Eliminar el archivo readme.html de WordPress
-RUN rm -f /var/www/html/readme.html
+#RUN rm -f /var/www/html/readme.html
     
 
 # Comando por defecto
