@@ -1,11 +1,5 @@
 # Usar la imagen oficial de WordPress
-FROM docker.io/wordpress:6.6.2
-
-# Establecer las variables de entorno necesarias
-ENV WORDPRESS_DB_HOST=mysql2008 \
-    WORDPRESS_DB_USER=usu2008 \
-    WORDPRESS_DB_PASSWORD=secret \
-    WORDPRESS_DB_NAME=wordpress2008
+FROM docker.io/wordpress:latest
 
 # Aumentar el límite de memoria de PHP y otros parámetros relacionados con la carga de archivos
 RUN echo "memory_limit = 512M" >> /usr/local/etc/php/conf.d/uploads.ini \
@@ -30,7 +24,7 @@ RUN echo 'Header always set Strict-Transport-Security "max-age=31536000; include
 # Añadir la cabecera X-Frame-Options: SAMEORIGIN
 RUN echo 'Header always set X-Frame-Options "SAMEORIGIN"' >> /etc/apache2/conf-available/security.conf
 
-# Punto 1 Añadir la restricción para xmlrpc.php en la configuración de Apache
+# Añadir la restricción para xmlrpc.php en la configuración de Apache
 RUN echo '<FilesMatch "xmlrpc\.php$">\n\
     Order deny,allow\n\
     Deny from all\n\
@@ -44,7 +38,7 @@ RUN echo '<FilesMatch "wp-cron\.php$">\n\
 
 # Configuración de CORS: Permitir solo solicitudes desde el dominio especificado
 RUN echo '<IfModule mod_headers.c>\n\
-    Header set Access-Control-Allow-Origin "https://ssosornonuevo.minsal.cl"\n\
+    Header set Access-Control-Allow-Origin "https://wordpress-wordpress.apps.prod.minsal.cl"\n\
     Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"\n\
     Header set Access-Control-Allow-Headers "Authorization, X-Requested-With, Content-Type, X-WP-Nonce"\n\
 </IfModule>' >> /etc/apache2/conf-available/cors.conf
